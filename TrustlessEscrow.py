@@ -27,9 +27,9 @@ class TrustlessEscrow(gl.Contract):
     state: str          # OPEN -> DELIVERED -> RELEASED | REFUNDED
     verdict_reason: str
 
-    def __init__(self, seller: Address, requirement: str):
+    def __init__(self, seller: str, requirement: str):
         self.buyer = gl.message.sender_address
-        self.seller = seller
+        self.seller = Address(seller)
         self.requirement = requirement
         self.state = "OPEN"
         self.evidence_url = ""
