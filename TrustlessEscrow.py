@@ -1,6 +1,7 @@
 # { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 from genlayer import *
 import json
+import typing
 
 """
 GenLayer Standard: TrustlessEscrow
@@ -58,7 +59,7 @@ class TrustlessEscrow(gl.Contract):
     def resolve(self) -> None:
         assert self.state == "DELIVERED", "nothing delivered yet"
 
-        def judge_delivery() -> dict:
+        def judge_delivery() -> typing.Any:
             page = gl.nondet.web.render(self.evidence_url, mode="text")
             prompt = (
                 "You are an impartial judge of a delivery dispute.\n"
@@ -70,7 +71,7 @@ class TrustlessEscrow(gl.Contract):
             )
             result = gl.nondet.exec_prompt(prompt, response_format="json")
             if not isinstance(result, dict):
-                raise gl.vm.UserError("LLM did not return a JSON object")
+                raise gl.UserError("LLM did not return a JSON object")
             met = result.get("met")
             if not isinstance(met, bool):
                 raise gl.vm.UserError("LLM JSON missing boolean 'met'")
